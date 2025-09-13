@@ -1,0 +1,25 @@
+[Unit]
+Description=LookingGlass Desktop Gateway 
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+ExecStart=/opt/lookingglass/lookingglass
+WorkingDirectory=/opt/lookingglass
+Restart=on-failure
+RestartSec=5
+
+# Drop privileges if you have a dedicated user
+User=root
+Group=root
+
+# Environment variables (set if needed)
+Environment=GOTRACEBACK=crash
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
