@@ -153,12 +153,21 @@ func login(w http.ResponseWriter, r *http.Request) {
 	containerName := "desktop-" + username + "-" + sessionID
 
 	args := []string{
-		"run", "-d", "--rm", "--privileged",
-		"-p", fmt.Sprintf("%d:8080", port),
-		"--name", containerName,
-		"-v", merged + ":/:rshared",
-		"ubuntu-xfce-novnc",
+	    "run", "-d", "--rm", "--privileged",
+ 	   "-p", fmt.Sprintf("%d:8080", port),
+ 	   "--name", containerName,
+	    "-v", merged + ":/mnt/overlay:rshared",
+	    "ubuntu-xfce-novnc",
 	}
+
+
+	// for video
+	args = append(args,
+ 	   "-v", "/dev/urandom:/dev/urandom",
+	    "-v", "/dev/null:/dev/null",
+	    "-v", "/tmp/.X11-unix:/tmp/.X11-unix",
+	)
+
 
 	cmd = exec.Command("docker", args...)
 	if err := cmd.Run(); err != nil {

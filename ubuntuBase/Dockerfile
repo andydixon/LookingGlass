@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     xfce4 xfce4-goodies \
     novnc websockify \
-    x11vnc xvfb \
+    x11vnc xvfb xserver-xorg-video-dummy xfonts-base \
     wget curl net-tools supervisor \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -31,4 +31,6 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY startup.sh /startup.sh
 RUN chmod +x /startup.sh
 
-CMD ["/usr/bin/supervisord"]
+COPY overlay-entrypoint.sh /overlay-entrypoint.sh
+RUN chmod +x /overlay-entrypoint.sh
+CMD ["/overlay-entrypoint.sh"]
